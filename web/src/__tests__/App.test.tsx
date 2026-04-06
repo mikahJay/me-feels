@@ -15,6 +15,11 @@ vi.mock('../api/client', () => ({
   apiClient: { get: vi.fn().mockResolvedValue({ data: { entries: [] } }), post: vi.fn() },
 }));
 
+// Navbar is tested separately; stub it out to keep App tests focused
+vi.mock('../components/Navbar', () => ({
+  Navbar: () => <nav data-testid="navbar" />,
+}));
+
 describe('App', () => {
   it('shows Home page when not authenticated', () => {
     mockUseAuth.mockReturnValue({ user: null, isLoading: false, login: vi.fn(), logout: vi.fn() });
@@ -34,13 +39,12 @@ describe('App', () => {
       logout: vi.fn(),
     });
     render(
-      <MemoryRouter initialEntries={['/dashboard']}>
+      <MemoryRouter initialEntries={['/home']}>
         <App />
       </MemoryRouter>
     );
     expect(screen.getByRole('heading', { name: 'How are you feeling?' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Your recent emotions' })).toBeInTheDocument();
-    expect(screen.getByText('bob')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Your recent feels' })).toBeInTheDocument();
+    expect(screen.getByTestId('navbar')).toBeInTheDocument();
   });
 });

@@ -2,22 +2,14 @@ import { GoogleLoginButton } from '../auth/GoogleLoginButton';
 
 export default function Home() {
   return (
-    <main style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      gap: '2rem',
-      padding: '1rem',
-    }}>
-      <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', margin: 0, color: '#5c6bc0' }}>me-feels</h1>
-        <p style={{ fontSize: '1.25rem', color: '#666', maxWidth: '480px', marginTop: '0.5rem' }}>
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] gap-8 px-4">
+      <div className="text-center max-w-lg">
+        <h1 className="text-5xl font-bold text-indigo-600 mb-3">me-feels</h1>
+        <p className="text-lg text-slate-500">
           Express, retain, manage and understand your emotions — with a little help from AI.
         </p>
       </div>
       <GoogleLoginButton />
-    </main>
+    </div>
   );
 }

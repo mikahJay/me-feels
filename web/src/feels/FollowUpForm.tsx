@@ -7,13 +7,14 @@ const PRESET_EMOTIONS = ['happy', 'sad', 'anxious', 'angry', 'excited', 'calm', 
 interface Props {
   rootFeelId: string;
   parentFollowUpId?: string;
+  initialDescription?: string;
   onCreated: (fu: FollowUp) => void;
   onCancel: () => void;
   depth?: number;
 }
 
-export function FollowUpForm({ rootFeelId, parentFollowUpId, onCreated, onCancel, depth = 0 }: Props) {
-  const [description, setDescription] = useState('');
+export function FollowUpForm({ rootFeelId, parentFollowUpId, initialDescription = '', onCreated, onCancel, depth = 0 }: Props) {
+  const [description, setDescription] = useState(initialDescription);
   const [attachEmotion, setAttachEmotion] = useState(false);
   const [emotion, setEmotion] = useState('');
   const [intensity, setIntensity] = useState(5);

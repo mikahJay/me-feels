@@ -3,6 +3,7 @@ import { apiClient } from '../api/client';
 import type { FollowUp } from './types';
 import { FollowUpTree } from './FollowUpTree';
 import { FollowUpForm } from './FollowUpForm';
+import { Recommendations } from './Recommendations';
 
 export interface Feel {
   id: string;
@@ -23,6 +24,7 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
   const [fuLoaded, setFuLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [addingFollowUp, setAddingFollowUp] = useState(false);
+  const [prefillDescription, setPrefillDescription] = useState('');
 
   const loadFollowUps = async () => {
     if (fuLoaded) return;
@@ -112,19 +114,33 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
           {addingFollowUp ? (
             <FollowUpForm
               rootFeelId={feel.id}
+              initialDescription={prefillDescription}
               onCreated={(fu) => {
                 setFollowUps(prev => [...prev, { ...fu, children: [] }]);
                 setAddingFollowUp(false);
+                setPrefillDescription('');
               }}
-              onCancel={() => setAddingFollowUp(false)}
+              onCancel={() => {
+                setAddingFollowUp(false);
+                setPrefillDescription('');
+              }}
             />
           ) : (
-            <button
-              onClick={() => setAddingFollowUp(true)}
-              className="text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
-            >
-              + add follow-up
-            </button>
+            <div className="space-y-3">
+              <Recommendations
+                feelId={feel.id}
+                onSelect={(desc) => {
+                  setPrefillDescription(desc);
+                  setAddingFollowUp(true);
+                }}
+              />
+              <button
+                onClick={() => setAddingFollowUp(true)}
+                className="text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
+              >
+                + add follow-up
+              </button>
+            </div>
           )}
         </div>
       )}

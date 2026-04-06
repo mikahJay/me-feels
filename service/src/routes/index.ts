@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authRouter from './auth';
 import emotionsRouter from './emotions';
 import followUpsRouter from './followups';
+import recommendationsRouter from './recommendations';
 import { query } from '../db';
 import { config } from '../config';
 
@@ -10,6 +11,7 @@ const router = Router();
 router.use('/auth', authRouter);
 router.use('/emotions', emotionsRouter);
 router.use('/follow-ups', followUpsRouter);
+router.use('/recommendations', recommendationsRouter);
 
 router.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

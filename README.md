@@ -121,4 +121,3 @@ Migrations in `service/src/db/migrations/` run automatically on first Docker sta
 | GET | `/emotions` | ✓ | List entries |
 | GET | `/emotions/:id` | ✓ | Get single entry |
 | DELETE | `/emotions/:id` | ✓ | Delete entry |
-A me-first approach to expressing, retaining, managing and leveraging my emotions

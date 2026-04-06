@@ -8,7 +8,7 @@ export interface Recommendation {
 
 interface Props {
   feelId: string;
-  onSelect: (description: string) => void;
+  onSelect: (description: string, attachFeel: boolean) => void;
 }
 
 export function Recommendations({ feelId, onSelect }: Props) {
@@ -87,20 +87,21 @@ export function Recommendations({ feelId, onSelect }: Props) {
       </div>
       <ul className="space-y-2">
         {recs.map((rec, i) => (
-          <li key={i} className="group bg-violet-50 border border-violet-100 rounded-md px-3 py-2">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0 flex-1">
-                <p className="text-sm text-slate-800">{rec.description}</p>
-                <p className="text-xs text-slate-500 mt-0.5 italic">{rec.rationale}</p>
-              </div>
+          <li key={i} className="bg-violet-50 border border-violet-100 rounded-md px-3 py-2.5">
+            <p className="text-sm text-slate-800">{rec.description}</p>
+            <p className="text-xs text-slate-500 mt-0.5 italic">{rec.rationale}</p>
+            <div className="flex items-center gap-2 mt-2">
               <button
-                onClick={() => onSelect(rec.description)}
-                title="Use this as a follow-up"
-                className="flex-shrink-0 mt-0.5 text-violet-400 hover:text-violet-700 opacity-0 group-hover:opacity-100 transition-all"
+                onClick={() => onSelect(rec.description, true)}
+                className="text-xs font-medium px-2.5 py-1 rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
+                ✓ I did this!
+              </button>
+              <button
+                onClick={() => onSelect(rec.description, false)}
+                className="text-xs text-violet-500 hover:text-violet-700 transition-colors"
+              >
+                log as follow-up
               </button>
             </div>
           </li>

@@ -8,14 +8,15 @@ interface Props {
   rootFeelId: string;
   parentFollowUpId?: string;
   initialDescription?: string;
+  initialAttachFeel?: boolean;
   onCreated: (fu: FollowUp) => void;
   onCancel: () => void;
   depth?: number;
 }
 
-export function FollowUpForm({ rootFeelId, parentFollowUpId, initialDescription = '', onCreated, onCancel, depth = 0 }: Props) {
+export function FollowUpForm({ rootFeelId, parentFollowUpId, initialDescription = '', initialAttachFeel = false, onCreated, onCancel, depth = 0 }: Props) {
   const [description, setDescription] = useState(initialDescription);
-  const [attachEmotion, setAttachEmotion] = useState(false);
+  const [attachEmotion, setAttachEmotion] = useState(initialAttachFeel);
   const [emotion, setEmotion] = useState('');
   const [intensity, setIntensity] = useState(5);
   const [notes, setNotes] = useState('');

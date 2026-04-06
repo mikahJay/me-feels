@@ -25,6 +25,7 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [addingFollowUp, setAddingFollowUp] = useState(false);
   const [prefillDescription, setPrefillDescription] = useState('');
+  const [prefillAttachFeel, setPrefillAttachFeel] = useState(false);
 
   const loadFollowUps = async () => {
     if (fuLoaded) return;
@@ -115,22 +116,26 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
             <FollowUpForm
               rootFeelId={feel.id}
               initialDescription={prefillDescription}
+              initialAttachFeel={prefillAttachFeel}
               onCreated={(fu) => {
                 setFollowUps(prev => [...prev, { ...fu, children: [] }]);
                 setAddingFollowUp(false);
                 setPrefillDescription('');
+                setPrefillAttachFeel(false);
               }}
               onCancel={() => {
                 setAddingFollowUp(false);
                 setPrefillDescription('');
+                setPrefillAttachFeel(false);
               }}
             />
           ) : (
             <div className="space-y-3">
               <Recommendations
                 feelId={feel.id}
-                onSelect={(desc) => {
+                onSelect={(desc, attachFeel) => {
                   setPrefillDescription(desc);
+                  setPrefillAttachFeel(attachFeel);
                   setAddingFollowUp(true);
                 }}
               />

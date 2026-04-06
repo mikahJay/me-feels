@@ -1,11 +1,22 @@
 import { Router, Request, Response } from 'express';
-import { buildGoogleAuthUrl, exchangeGoogleCode } from '../services/auth.service';
+import { buildGoogleAuthUrl, devLogin, exchangeGoogleCode } from '../services/auth.service';
 import { requireAuth } from '../middleware/auth';
+import { config } from '../config';
 
 const router = Router();
 
-// GET /auth/google — redirect to Google consent screen
-router.get('/google', (_req: Request, res: Response) => {
+// GET /auth/google — redirect to Google consent screen (or auto-login in dev mode)
+router.get('/google', async (_req: Request, res: Response) => {
+  if (config.devMode) {
+    try {
+      const tokens = await devLogin();
+      res.redirect(`${process.env.WEB_URL ?? 'http://localhost:3000'}?access_token=${tokens.accessToken}`);
+    } catch (err) {
+      console.error('Dev login error:', err);
+      res.redirect(`${process.env.WEB_URL ?? 'http://localhost:3000'}?auth_error=dev_login_failed`);
+    }
+    return;
+  }
   const url = buildGoogleAuthUrl();
   res.redirect(url);
 });

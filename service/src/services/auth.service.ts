@@ -58,6 +58,18 @@ export function signJwt(user: User): string {
   });
 }
 
+const DEV_USER: GoogleUserInfo = {
+  id: 'dev-local-bob',
+  email: 'bob@local.dev',
+  name: 'bob',
+  picture: '',
+};
+
+export async function devLogin(): Promise<AuthTokens> {
+  const user = await upsertUser(DEV_USER);
+  return { accessToken: signJwt(user) };
+}
+
 export function buildGoogleAuthUrl(): string {
   const params = new URLSearchParams({
     client_id: config.google.clientId,

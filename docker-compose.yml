@@ -32,6 +32,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mefeels_dev}
       JWT_SECRET: ${JWT_SECRET:-dev_secret_change_in_production}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      DEV_MODE: ${DEV_MODE:-false}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:3001/auth/google/callback}

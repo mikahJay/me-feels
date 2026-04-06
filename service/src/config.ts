@@ -4,6 +4,7 @@ dotenv.config();
 export const config = {
   port: parseInt(process.env.SERVICE_PORT ?? '3001', 10),
   nodeEnv: process.env.NODE_ENV ?? 'development',
+  devMode: process.env.DEV_MODE === 'true',
   jwt: {
     secret: process.env.JWT_SECRET ?? 'dev_secret_change_in_prod',
     expiresIn: process.env.JWT_EXPIRES_IN ?? '7d',

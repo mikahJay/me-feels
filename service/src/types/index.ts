@@ -17,6 +17,7 @@ export interface EmotionEntry {
   notes: string | null;
   tags: string[];
   aiInsights: Record<string, unknown> | null;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,4 +39,18 @@ export interface GoogleUserInfo {
 
 export interface AuthTokens {
   accessToken: string;
+}
+
+export interface FollowUp {
+  id: string;
+  userId: string;
+  rootFeelId: string;
+  parentFollowUpId: string | null;
+  description: string;
+  attachedFeelId: string | null;
+  attachedFeel?: EmotionEntry | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  children?: FollowUp[];
 }

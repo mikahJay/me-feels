@@ -28,7 +28,7 @@ export async function listEntries(
 ): Promise<EmotionEntry[]> {
   return query<EmotionEntry>(
     `SELECT * FROM emotions.entries
-     WHERE user_id = $1
+     WHERE user_id = $1 AND is_active = TRUE
      ORDER BY created_at DESC
      LIMIT $2 OFFSET $3`,
     [userId, limit, offset]
@@ -45,7 +45,9 @@ export async function getEntry(userId: string, entryId: string): Promise<Emotion
 
 export async function deleteEntry(userId: string, entryId: string): Promise<boolean> {
   const rows = await query<{ id: string }>(
-    `DELETE FROM emotions.entries WHERE id = $1 AND user_id = $2 RETURNING id`,
+    `UPDATE emotions.entries SET is_active = FALSE, updated_at = NOW()
+     WHERE id = $1 AND user_id = $2 AND is_active = TRUE
+     RETURNING id`,
     [entryId, userId]
   );
   return rows.length > 0;

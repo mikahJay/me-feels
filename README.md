@@ -81,10 +81,30 @@ npm run dev
 ```
 
 ### Run tests
+
+Tests are unit tests only — no running containers required.
+
+**Service** (Jest + ts-jest):
 ```bash
-cd service && npm test
-cd web && npm test
+cd service
+npm test                  # run all unit tests
+npm run test:watch        # watch mode for active development
+npm run test:coverage     # run with coverage report (output: service/coverage/)
+npm run test:smoke        # integration smoke tests (requires running containers)
 ```
+
+**Web** (Vitest + React Testing Library):
+```bash
+cd web
+npm test                  # run all tests once
+npm run test:watch        # watch mode for active development
+npm run test:coverage     # run with coverage report (output: web/coverage/)
+```
+
+Open `coverage/index.html` in a browser for a full interactive report.
+
+> **Smoke tests** hit the live service at `http://localhost:3001` (override with `SERVICE_URL` env var).
+> They require Docker containers to be running and `.env` fully populated with real credentials.
 
 ## Environment Variables
 

@@ -17,7 +17,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 # Copy env file if it doesn't exist
 if (-not (Test-Path ".env")) {
     Copy-Item ".env.example" ".env"
-    Write-Host "Created .env from .env.example — update with your actual values!" -ForegroundColor Yellow
+    Write-Host "Created .env from .env.example - update with your actual values!" -ForegroundColor Yellow
 }
 
 # Install service dependencies

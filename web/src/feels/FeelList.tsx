@@ -3,7 +3,7 @@ import { apiClient } from '../api/client';
 import type { FollowUp } from './types';
 import { FollowUpTree } from './FollowUpTree';
 import { FollowUpForm } from './FollowUpForm';
-import { Recommendations } from './Recommendations';
+import { Recommendations, type Recommendation } from './Recommendations';
 
 export interface Feel {
   id: string;
@@ -26,6 +26,25 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
   const [addingFollowUp, setAddingFollowUp] = useState(false);
   const [prefillDescription, setPrefillDescription] = useState('');
   const [prefillAttachFeel, setPrefillAttachFeel] = useState(false);
+  const [recs, setRecs] = useState<Recommendation[]>([]);
+  const [recsLoaded, setRecsLoaded] = useState(false);
+  const [recsLoading, setRecsLoading] = useState(false);
+  const [recsError, setRecsError] = useState<string | null>(null);
+
+  const fetchRecs = async () => {
+    setRecsLoading(true);
+    setRecsError(null);
+    try {
+      const res = await apiClient.get<{ recommendations: Recommendation[] }>(`/recommendations?feelId=${feel.id}`);
+      setRecs(res.data.recommendations);
+      setRecsLoaded(true);
+    } catch (err) {
+      setRecsError('Could not load recommendations. Try again.');
+      console.error(err);
+    } finally {
+      setRecsLoading(false);
+    }
+  };
 
   const loadFollowUps = async () => {
     if (fuLoaded) return;
@@ -113,26 +132,46 @@ function FeelCard({ feel, onDeleted }: FeelCardProps) {
           )}
 
           {addingFollowUp ? (
-            <FollowUpForm
-              rootFeelId={feel.id}
-              initialDescription={prefillDescription}
-              initialAttachFeel={prefillAttachFeel}
-              onCreated={(fu) => {
-                setFollowUps(prev => [...prev, { ...fu, children: [] }]);
-                setAddingFollowUp(false);
-                setPrefillDescription('');
-                setPrefillAttachFeel(false);
-              }}
-              onCancel={() => {
-                setAddingFollowUp(false);
-                setPrefillDescription('');
-                setPrefillAttachFeel(false);
-              }}
-            />
+            <>
+              <Recommendations
+                feelId={feel.id}
+                recs={recs}
+                loaded={recsLoaded}
+                loading={recsLoading}
+                error={recsError}
+                onFetch={fetchRecs}
+                onSelect={(desc, attachFeel) => {
+                  setPrefillDescription(desc);
+                  setPrefillAttachFeel(attachFeel);
+                }}
+              />
+              <FollowUpForm
+                key={prefillDescription}
+                rootFeelId={feel.id}
+                initialDescription={prefillDescription}
+                initialAttachFeel={prefillAttachFeel}
+                onCreated={(fu) => {
+                  setFollowUps(prev => [...prev, { ...fu, children: [] }]);
+                  setAddingFollowUp(false);
+                  setPrefillDescription('');
+                  setPrefillAttachFeel(false);
+                }}
+                onCancel={() => {
+                  setAddingFollowUp(false);
+                  setPrefillDescription('');
+                  setPrefillAttachFeel(false);
+                }}
+              />
+            </>
           ) : (
             <div className="space-y-3">
               <Recommendations
                 feelId={feel.id}
+                recs={recs}
+                loaded={recsLoaded}
+                loading={recsLoading}
+                error={recsError}
+                onFetch={fetchRecs}
                 onSelect={(desc, attachFeel) => {
                   setPrefillDescription(desc);
                   setPrefillAttachFeel(attachFeel);

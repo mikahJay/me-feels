@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { apiClient } from '../api/client';
-
 export interface Recommendation {
   description: string;
   rationale: string;
@@ -8,36 +5,29 @@ export interface Recommendation {
 
 interface Props {
   feelId: string;
+  recs: Recommendation[];
+  loaded: boolean;
+  loading: boolean;
+  error: string | null;
+  onFetch: () => void;
   onSelect: (description: string, attachFeel: boolean) => void;
 }
 
-export function Recommendations({ feelId, onSelect }: Props) {
-  const [recs, setRecs] = useState<Recommendation[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export function Recommendations({ recs, loaded, loading, error, onFetch, onSelect }: Props) {
 
-  const fetchRecs = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await apiClient.get<{ recommendations: Recommendation[] }>(
-        `/recommendations?feelId=${feelId}`
-      );
-      setRecs(res.data.recommendations);
-      setLoaded(true);
-    } catch (err) {
-      setError('Could not load recommendations. Try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (error) {
+    return (
+      <div className="text-xs text-red-500">
+        {error}{' '}
+        <button onClick={onFetch} className="underline hover:no-underline">Retry</button>
+      </div>
+    );
+  }
 
   if (!loaded) {
     return (
       <button
-        onClick={fetchRecs}
+        onClick={onFetch}
         disabled={loading}
         className="flex items-center gap-1.5 text-xs text-violet-600 hover:text-violet-800 disabled:opacity-50 transition-colors"
       >
@@ -61,21 +51,12 @@ export function Recommendations({ feelId, onSelect }: Props) {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-xs text-red-500">
-        {error}{' '}
-        <button onClick={fetchRecs} className="underline hover:no-underline">Retry</button>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-medium text-violet-700 uppercase tracking-wide">AI suggestions</span>
         <button
-          onClick={fetchRecs}
+          onClick={onFetch}
           disabled={loading}
           title="Refresh recommendations"
           className="text-violet-400 hover:text-violet-600 disabled:opacity-50 transition-colors"
